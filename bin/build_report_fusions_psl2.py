@@ -554,8 +554,11 @@ if __name__ == '__main__':
     unmapped_reads = set()
     if options.input_unmapped_reads_filename:
         print "Reading...",options.input_unmapped_reads_filename
-        unmapped_reads = set([line.rstrip('\r\n') for line in file(options.input_unmapped_reads_filename,'r').readlines()])
-
+        try:
+            unmapped_reads = set([line.rstrip('\r\n') for line in open(options.input_unmapped_reads_filename, 'r')])
+        except IOError:
+            print "Warning: Unmapped reads file '%s' not found. Skipping." % options.input_unmapped_reads_filename
+            unmapped_reads = set()
 
     print "Reading...",options.input_fusion_psl_filename
     data = [line.rstrip('\r\n').split('\t') for line in file(options.input_fusion_psl_filename,'r') if line.rstrip('\r\n')]
